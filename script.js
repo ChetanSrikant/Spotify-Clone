@@ -1,6 +1,22 @@
 console.log("JS time")
 
 let currentSong = new Audio();
+let songs;
+
+function secondsToMinutesSeconds(seconds) {
+    if (isNaN(seconds) || seconds < 0) {
+        return "00:00";
+    }
+
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+
+    return `${formattedMinutes}:${formattedSeconds}`;
+}
+
 
 async function getSongs() {
 
@@ -26,11 +42,14 @@ async function getSongs() {
 
 }
 
-const playMusic = (track)=>{
+const playMusic = (track, pause=false)=>{
     // let audio = new Audio("/songs/"+track)
     currentSong.src = "/songs/"+track
-    currentSong.play()
-    play.src = "pause.svg";
+
+    if(!pause){
+        currentSong.play()
+        play.src = "pause.svg";
+    }    
     document.querySelector(".songinfo").innerHTML = track;
     document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
 }
@@ -39,8 +58,9 @@ async function main(){
 
     
 
-    let songs = await getSongs()
+    songs = await getSongs()
     console.log(songs)
+    playMusic(songs[0], true)
 
     let songUL = document.querySelector(".songList").getElementsByTagName("ul")[0]
     for (const song of songs) {
@@ -79,6 +99,64 @@ async function main(){
             play.src = "play.svg"
         }
     })
+
+    // Listen for the time update event
+
+    currentSong.addEventListener("timeupdate", ()=>{
+        // console.log(currentSong.currentTime, currentSong.duration);
+
+        document.querySelector(".songtime").innerHTML = `${secondsToMinutesSeconds(currentSong.currentTime)} / ${secondsToMinutesSeconds(currentSong.duration)}`
+        document.querySelector(".circle").style.left = (currentSong.currentTime/currentSong.duration)*100 + "%";
+    })
+
+    // add event listner to seekbar
+    
+    document.querySelector(".seekbar").addEventListener("click", e=>{
+        let precent = (e.offsetX/e.target.getBoundingClientRect().width)*100;
+        document.querySelector(".circle").style.left = precent + "%";
+        currentSong.currentTime = ((currentSong.duration)*precent)/100;
+    })
+
+    // adding event istner for hamburger
+
+    document.querySelector(".hamburger").addEventListener("click", ()=>{
+        document.querySelector(".left").style.left = 0;
+    })
+
+    // adding event listner to close
+
+    document.querySelector(".close").addEventListener("click", ()=>{
+        document.querySelector(".left").style.left = "-100%"
+    })
+
+    document.getElementById("previous").addEventListener("click", () => {
+        console.log("previous");
+    
+        let index = songs.indexOf(currentSong.src.split("/").slice(-1)[0]);
+        console.log(songs, index);
+    
+        if (index - 1 >= 0) {
+            playMusic(songs[index - 1]);
+        }
+    });
+    
+    document.getElementById("next").addEventListener("click", () => {
+        console.log("next");
+    
+        let index = songs.indexOf(currentSong.src.split("/").slice(-1)[0]);
+        console.log(songs, index);
+    
+        if (index + 1 < songs.length) { // Corrected the condition here
+            playMusic(songs[index + 1]);
+        }
+    });
+
+    document.querySelector(".range").getElementsByTagName("input")[0].addEventListener("change", (e)=>{
+        console.log("setting volume")
+        currentSong.volume = parseInt(e.target.value)/100;
+    })
+    
+
 
 }
 
