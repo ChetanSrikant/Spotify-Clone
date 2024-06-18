@@ -101,15 +101,16 @@ header > *{
 }
 
 .cardContainer{
-    margin: 30px;
+    margin: 10px 30px;
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
     max-height: 70.4vh;
     overflow: auto;
+    
 }
 
-.card{
+.card{    
     width: 170px;
     padding: 10px;
     border-radius: 10px;
@@ -246,6 +247,9 @@ header > *{
     bottom: 8px;
     margin: 6px;
     cursor: pointer;
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
 }
 
 .circle {
@@ -307,10 +311,15 @@ header > *{
 }
 
 .volume{
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 12px;
+}
+
+.range input{
+    cursor: pointer;
 }
 
 @media (max-width: 1200px) {
