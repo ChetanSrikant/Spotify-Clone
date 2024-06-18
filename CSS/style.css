@@ -47,6 +47,10 @@ body{
     padding-top: 14px;    
 }
 
+.style{
+    margin: 10px;
+}
+
 .heading{
     width: 100%;
     display: flex;
@@ -106,17 +110,25 @@ header > *{
     gap: 10px;
     flex-wrap: wrap;
     max-height: 70.4vh;
-    overflow: auto;
+    overflow-y: auto;
+    max-height: 60vh;
     
 }
 
-.card{    
-    width: 170px;
+.card{
+    width: 215px;
     padding: 10px;
     border-radius: 10px;
     /* background-color: #252525; */
     position: relative;
     transition: all 0.5s;
+}
+
+.card img{
+    height: 30vh;
+    background-size: cover;       /* Ensures the image covers the container */
+    background-position: center;  /* Centers the image */
+    background-repeat: no-repeat;
 }
 
 .card:hover{
